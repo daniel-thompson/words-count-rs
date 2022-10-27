@@ -1,6 +1,7 @@
+---
 name: CI
 
-on: [ workflow_dispatch, push, pull_request ]
+on: [workflow_dispatch, push, pull_request]
 
 env:
   CARGO_TERM_COLOR: always
@@ -9,24 +10,20 @@ jobs:
   rustfmt:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: nightly
-          override: true
           components: rustfmt
       - run: cargo fmt -- --check
 
   clippy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: nightly
-          override: true
           components: clippy
       - run: cargo clippy --all-targets --all-features -- -D warnings
 
@@ -44,12 +41,10 @@ jobs:
     name: Test ${{ matrix.toolchain }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions/checkout@v3
+      - uses: dtolnay/rust-toolchain@master
         with:
-          profile: minimal
           toolchain: ${{ matrix.toolchain }}
-          override: true
       - run: cargo build
       - run: cargo test
       - run: cargo doc
